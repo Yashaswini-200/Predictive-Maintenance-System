@@ -1,17 +1,31 @@
-#include<math.h>
-#include<stdlib.h>
-float generate_vibration(void){
-    static float t = 0.03f;
-    float dt = 0.02f;
-    float noise = (((float)rand() / RAND_MAX) - 0.5f) * 0.4f;
-    float vib = sin(t);
-    float amp = 1.0f;
-    t+=dt;
-    return amp*vib+noise;
-}
+#include "vibration.h"
 
-void loop()
+#include <math.h>
+#include <stdlib.h>
+
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
+
+float generate_vibration(void)
 {
-    Serial.println(generate_vibration());
-    delay(100);
+    static float t = 0.0f;
+
+    const float dt = 0.02f;
+    const float amplitude = 1.0f;
+
+    float noise =
+        (((float)rand() / RAND_MAX) - 0.5f) * 0.4f;
+
+    float vibration =
+        amplitude * sinf(t) + noise;
+
+    t += dt;
+
+    if (t >= (2.0f * PI))
+    {
+        t = 0.0f;
+    }
+
+    return vibration;
 }
