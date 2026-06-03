@@ -9,3 +9,9 @@ float generate_vibration(void){
     t+=dt;
     return amp*vib+noise;
 }
+
+void loop()
+{
+    Serial.println(generate_vibration());
+    delay(100);
+}
