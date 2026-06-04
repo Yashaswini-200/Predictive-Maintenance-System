@@ -8,3 +8,7 @@ float generate_temperature(void){
     temperature += 0.1f*(target - temperature);
     return temperature;
 }
+
+TempState get_temperature_state(void);
+
+const char* get_temperature_state_string(void);
