@@ -9,11 +9,7 @@ enum TempState
     TEMP_RECOVERY
 };
 void update_temperature_state();
-
 float generate_temperature();
-
 TempState get_temperature_state();
-
 const char* get_temperature_state_string();
-
 #endif
