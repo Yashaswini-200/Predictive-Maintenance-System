@@ -6,18 +6,20 @@ static int healthy_count = 0;
 FaultState get_fault_state(float temperature, float rms) {
     int healthy  = (temperature <= 40.0f && rms <= 1.2f);
     int warning  = ((temperature > 40.0f && temperature <= 50.0f) ||
-                    (rms > 1.2f && rms <= 1.5f));
+                    (rms > 1.2f && rms <= 1.5f) ||
+                    (temperature > 50.0f && rms <= 1.2f) ||
+                    (temperature <= 40.0f && rms > 1.5f));
     int critical = (temperature > 50.0f && rms > 1.5f);
+
     switch (current_state) {
         case FAULT_CRITICAL:
-            if(critical){
-                current_state = FAULT_CRITICAL;
-            } else if (critical && healthy) {
+            if (healthy) {
+                current_state = FAULT_RECOVERY;
+                healthy_count = 0;
+            } else if (warning) {
                 current_state = FAULT_WARNING;
             }
-            else if (healthy) {
-                current_state = FAULT_RECOVERY;
-            }
+            break;
 
         case FAULT_RECOVERY:
             if (healthy) {
@@ -27,7 +29,7 @@ FaultState get_fault_state(float temperature, float rms) {
                     healthy_count = 0;
                 }
             } else {
-               if (critical) {
+                if (critical) {
                     current_state = FAULT_CRITICAL;
                 } else if (warning) {
                     current_state = FAULT_WARNING;
@@ -37,7 +39,11 @@ FaultState get_fault_state(float temperature, float rms) {
             break;
 
         case FAULT_NORMAL:
-
+            if (critical) {
+                current_state = FAULT_CRITICAL;
+            } else if (warning) {
+                current_state = FAULT_WARNING;
+            }
             break;
 
         case FAULT_WARNING:
