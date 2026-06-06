@@ -2,12 +2,11 @@
 #define FAULT_H
 enum FaultState
 {
-    NORMAL,
-    WARNING,
-    FAULT,
-    RECOVERY
+    FAULT_NORMAL,
+    FAULT_WARNING,
+    FAULT_CRITICAL,
+    FAULT_RECOVERY
 };
-FaultState get_fault_state(
-    float temperature,
-    float rms);
+FaultState get_fault_state(float temperature,float rms);
+
 #endif
